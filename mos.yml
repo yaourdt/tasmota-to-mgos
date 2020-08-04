@@ -1,0 +1,74 @@
+author: mark dornbach <mark@dornbach.io>
+description: a minimal firmware for ota flashing mongoose os from tasmota or tuya stock firmware
+platform: esp8266
+version: 0.0.1
+
+libs_version:        latest
+modules_version:     latest
+mongoose_os_version: latest
+manifest_version:    2020-01-29
+sources:             [src]
+filesystem:          [fs]
+tags:                [c, tuya, tasmota, mongoose]
+
+# Custom configuration
+config_schema:
+  #### sys ####
+  - ["debug.level", 3]                     # 0 = ERROR, 1 = WARN, 2 = INFO, 3+ = DEBUG
+  #### wifi ####
+  - ["wifi.sta.enable",             true ] # join wifi as client
+  - ["wifi.sta.ssid",     "vtrust-flash" ] # SSID
+  - ["wifi.sta.pass",                 "" ] # password
+  - ["wifi.sta.ip",        "10.42.42.44" ] # device static IP
+  - ["wifi.sta.netmask", "255.255.255.0" ] # netmask
+  - ["wifi.sta.gw",         "10.42.42.1" ] # default gateway
+  - ["wifi.sta.nameserver", "10.42.42.1" ] # DNS nameserver
+  - ["wifi.ap.enable",              true ] # enable Access Point mode
+  - ["wifi.ap.ssid",         "mg-??????" ] # SSID to use. ?? symbols are substituted by MAC address
+  - ["wifi.ap.pass",                  "" ] # password
+  - ["wifi.ap.hidden",             false ] # hide WiFi network
+  - ["wifi.ap.ip",         "10.42.42.44" ] # device static IP
+  - ["wifi.ap.netmask",  "255.255.255.0" ] # netmask
+  - ["wifi.ap.gw",          "10.42.42.1" ] # default gateway
+  - ["wifi.ap.nameserver",  "10.42.42.1" ] # DNS nameserver
+  - ["wifi.ap.dhcp_start", "10.42.42.50" ] # DHCP start Address
+  - ["wifi.ap.dhcp_end",   "10.42.42.60" ] # DHCP end Address
+
+libs:
+  - origin: https://github.com/mongoose-os-libs/wifi
+  - origin: https://github.com/mongoose-os-libs/mbedtls         # remove support for crypto chip to reduce footprint
+    variant: esp8266-noatca
+  - origin: https://github.com/mongoose-os-libs/mongoose        # remove SSL support to reduce footprint
+    variant: esp8266-nossl
+  - origin: https://github.com/mongoose-os-libs/ota-http-server # local OTA update via HTTP POST
+
+build_vars:
+  FS_SIZE: 32768 #65536                                         # squish rom size below 512K boundary
+  FLASH_SIZE: 2097152
+
+conds:
+  - when: build_vars.MODEL == "Shelly1"
+    apply:
+      name: switch1
+      build_vars:
+        BOOT_CONFIG_ADDR: 0x1000
+  - when: build_vars.MODEL == "Shelly1PM"
+    apply:
+      name: switch1pm
+      build_vars:
+        BOOT_CONFIG_ADDR: 0x1000
+  - when: build_vars.MODEL == "ShellyPlugS"
+    apply:
+      name: shelly-plug-s
+      build_vars:
+        BOOT_CONFIG_ADDR: 0x7000
+  - when: build_vars.MODEL == "Shelly2"
+    apply:
+      name: switch
+      build_vars:
+        BOOT_CONFIG_ADDR: 0x1000
+  - when: build_vars.MODEL == "Shelly25"
+    apply:
+      name: switch25
+      build_vars:
+        BOOT_CONFIG_ADDR: 0x1000
