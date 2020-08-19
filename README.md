@@ -28,8 +28,8 @@ your device may be bricked, if you don't know how to flash a new firmware over a
 wired connection. Proceed with caution!_
 
 There are two versions of this firmware,
- - [for a flash size of 2 MB](https://github.com/yaourdt/tasmota-to-mgos/binaries/mgos512k-2MB.bin) and
- - [for a flash size of 4 Mb](https://github.com/yaourdt/tasmota-to-mgos/binaries/mgos512k-4MB.bin).
+ - [for a flash size of 2 MB](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-2MB.bin) and
+ - [for a flash size of 4 Mb](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-4MB.bin).
 
 Shelly users should pick the 2 MB version.
 
