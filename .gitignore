@@ -2,6 +2,7 @@
 
 # mgos
 build/
+deps/
 
 # IDEs and editors
 .on-save.json
