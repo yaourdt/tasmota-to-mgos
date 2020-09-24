@@ -14,7 +14,7 @@ tags:                [c, tuya, tasmota, mongoose]
 # Custom configuration
 config_schema:
   #### sys ####
-  - ["debug.level", 3]                     # 0 = ERROR, 1 = WARN, 2 = INFO, 3+ = DEBUG
+  - ["debug.level", 2]                     # 0 = ERROR, 1 = WARN, 2 = INFO, 3+ = DEBUG
   #### wifi ####
   - ["wifi.sta.enable",             true ] # join wifi as client
   - ["wifi.sta.ssid",     "vtrust-flash" ] # SSID
@@ -44,21 +44,7 @@ libs:
 
 build_vars:
   FLASH_SIZE: 524288
-  BOOT_CONFIG_ADDR: 0x1000
+  MGOS_MBEDTLS_ENABLE_ATCA: 0
 
-# 0f = 512KB; 2f = 1MB; 3f = 2MB; 4f = 4MB
-conds:
-  - when: build_vars.TARGET_FLASH_SIZE == "2MB"
-    apply:
-      cdefs:
-        TARGET_FLASH_SIZE: 0x3f
-      build_vars:
-        TARGET_APP1_ADDR: 0x108000
-        TARGET_FS1_ADDR: 0x1db000
-  - when: build_vars.TARGET_FLASH_SIZE == "4MB"
-    apply:
-      cdefs:
-        TARGET_FLASH_SIZE: 0x4f
-      build_vars:
-        TARGET_APP1_ADDR: 0x200000
-        TARGET_FS1_ADDR: 0x300000
+cdefs:
+  MG_ENABLE_SSL: 0

@@ -86,6 +86,7 @@ MGOS_SRCS += cs_file.c cs_hex.c cs_rbuf.c \
              mgos_gpio.c \
              mgos_hw_timers.c \
              mgos_init.c \
+             mgos_json_utils.cpp \
              mgos_time.c \
              mgos_timers.c \
              mgos_mmap_esp.c \
@@ -236,25 +237,23 @@ MGOS_ROOT_FS_TYPE ?= SPIFFS
 ifdef FS_SIZE
 MGOS_ROOT_FS_SIZE = $(FS_SIZE) # For backward comaptibility
 endif
-TARGET_APP1_ADDR ?=
-TARGET_FS1_ADDR ?=
 
 ifeq ("$(FLASH_SIZE)", "524288")
 #
 # 0.5MB (4Mb) nano layout:
 #
 # 0x000000 - rBoot       |
-# 0x001000 - rBoot cfg   |
-# 0x004000 - app (450K)  |
-# 0x075000 - fs (16K)    |
+# 0x007000 - rBoot cfg   |
+# 0x008000 - app (444K)  |
+# 0x077000 - fs (16K)    |
 # 0x07b000 - rf cal      |
 # 0x07c000 - sys params  |
 MGOS_ROOT_FS_SIZE ?= 16384
-ROM_SIZE =  0x70480
-APP0_ADDR = 0x4000
-FS0_ADDR  = 0x75000
-APP1_ADDR = $(TARGET_APP1_ADDR)
-FS1_ADDR = $(TARGET_FS1_ADDR)
+ROM_SIZE  = 0x6F000
+APP0_ADDR = 0x08000
+FS0_ADDR  = 0x77000
+APP1_ADDR = 0x108000
+FS1_ADDR  = 0x1db000
 else
 ifeq ("$(FLASH_SIZE)", "1048576")
 #

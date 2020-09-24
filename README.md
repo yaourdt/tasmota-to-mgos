@@ -5,21 +5,17 @@ or compatible firmware types.
 
 ## Overview
 
-This is a first working draft for an intermediate firmware which can be used to
-wirelessly recover [Mongoose OS](https://mongoose-os.com/docs/mongoose-os/quickstart/setup.md)
+This is a first working draft for an intermediate firmware, which can be used to
+wirelessly restore [Mongoose OS](https://mongoose-os.com/docs/mongoose-os/quickstart/setup.md)
 on esp8266 based IoT devices initially shipped with a Mongoose OS based
-firmware, if the device was converted to a different firmware using [mg2x](https://github.com/yaourdt/mgos-to-tasmota).
-This recovery firmware will install a minimal version of Mongoose OS, and you can continue from
-there to your favourite target release, such as e.g. the Shelly stock firmware.
+firmware. This firmware will install a minimal version of Mongoose OS, and you
+can continue from there to your favourite target release, such as e.g. the
+Shelly stock firmware.
 
 ## Supported Devices
 
-Any device initially shipped with a Mongoose OS based firmware which has been
-build using `build_vars: BOOT_CONFIG_ADDR: 0x1000`. Examples are Shelly1,
-Shelly1PM, Shelly2, Shelly25, and ShellyEM.
-
-**Currently not supported:** ShellyPlugS, ShellyRGBW2, ShellyDimmer1,
-ShellyDimmer2, ShellyBulb, ShellyVintage, ShellyPlugUS.
+Any esp8266 device with a physical flash size of 2 or 4 MB, which was initially
+shipped with a Mongoose OS based firmware.
 
 ## Install
 
@@ -27,15 +23,23 @@ ShellyDimmer2, ShellyBulb, ShellyVintage, ShellyPlugUS.
 your device may be bricked, if you don't know how to flash a new firmware over a
 wired connection. Proceed with caution!_
 
-There are two versions of this firmware,
- - [for a flash size of 2 MB](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-2MB.bin) and
- - [for a flash size of 4 Mb](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-4MB.bin).
+There are two versions with different bootloader configuration locations. The
+default location in Mongoose OS is `0x7000`, but some devices use `0x1000`
+instead. Be careful to pick the appropriate version, or the device will be
+bricked during the first boot of the target firmware!
 
-Shelly users should pick the 2 MB version.
+For Shelly 1, Shelly 1PM, Shelly 2, Shelly 2.5, and Shelly EM use __0x1000__,
+for Shelly Plug S, Shelly RGBW2, Shelly Dimmer 1, Shelly Dimmer 2, Shelly Bulb,
+Shelly Vintage, Shelly Plug US, Shelly H&T, Shelly Duo use __0x7000__.
+
+Available versions:
+ * [0x1000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x1.bin)
+ * [0x7000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x7.bin)
 
 Use your current firmware's update mechanism to apply x2mg as you would for any
 other update. If the process succeeds, the device will reboot and you will see a
-new WiFi network labeled _mg-????_.
+new WiFi network labeled _mg-????_. Be patient, this process can take up to two
+minutes.
 
 As soon as you have joined the devices WiFi network, you can install the desired
 version of a Mongoose OS based firmware via the command
@@ -48,10 +52,17 @@ Replace `./fw.zip` with the path to your target firmware ZIP-file. If you own a
 Shelly device and want to revert to stock firmware, you can find the matching
 files [here](https://api.shelly.cloud/files/firmware).
 
+## Trouble shooting
+
+### Tasmota: Upload Failed - Not compatible
 If you cannot upload the intermediate firmware to Tasmota due to a _not
-compatible_ error, see [this github issue](https://github.com/esphome/issues/issues/955).
-In short: Running `Setoption78 1` in the Tasmota console disables compatibility
-check and allows for the update to be applied.
+compatible_ error, run `Setoption78 1` in the Tasmota console to disable
+the compatibility check and allow for the update to be applied. See
+[this github issue](https://github.com/esphome/issues/issues/955).
+
+### Tasmota: Upload Failed - Upload buffer miscompare
+There is not enough space for Tasmota to save the update file. Switch to
+**tasmota-minimal.bin** before trying again.
 
 ## Build the firmware yourself
 
@@ -59,25 +70,34 @@ You can compile a binary version of this firmware using [mos tools](https://mong
 run
 
 ```
-mos build --build-var TARGET_FLASH_SIZE=2MB --local
+mos build --build-var BOOT_CONFIG_ADDR=0x7000 --local
 ```
 
 to copy all necessary libraries to `deps/...`. It does not matter if the initial
-build fails, as long as the libraries have been installed.
+build fails, as long as the libraries have been installed. Now patch some files
+with those included in this repository:
 
-Now move the makefile included in this repository to `deps/modules/mongoose-os/platforms/esp8266/Makefile.build`
+```
+cp patch/Makefile.build deps/modules/mongoose-os/platforms/esp8266/Makefile.build
+cp patch/rboot/rboot.c deps/modules/mongoose-os/platforms/esp8266/rboot/rboot/rboot.c
+cp patch/rboot/rboot.h deps/modules/mongoose-os/platforms/esp8266/rboot/rboot/rboot.h
+cp patch/core/mos.yml deps/core/mos.yml
+```
+
 and build again with
 
 ```
-mos build --build-var TARGET_FLASH_SIZE=2MB --local
+mos build --build-var BOOT_CONFIG_ADDR=0x7000 --local
 ```
 
-for a target flash size of 2MB (=32Mb). Alternatively, you may build using
-`TARGET_FLASH_SIZE=4MB`.
+for the Mongoose OS bootloader config default location. Alternatively, you may
+build using `BOOT_CONFIG_ADDR=0x1000`.
 
 The generated firmware can be found in `build/fw.zip` and flashed using the
-command `mos flash --esp-flash-params 'dio,4m,80m'`. It can be combined into a
-into a single binary file using [mgos-combine](https://github.com/yaourdt/mgos-combine).
+command `mos flash --esp-erase-chip --esp-flash-params 'dio,4m,80m'`.
+
+If you want to read it back without it changing anything, pull pin 14 low during
+boot.
 
 ## Acknowledgments
 Thanks to [rojer](https://github.com/rojer) for helping me with the debugging of
