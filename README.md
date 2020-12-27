@@ -1,4 +1,4 @@
-# x2mg
+# Convert to Mongoose OS
 
 A minimal firmware for OTA (over the air) flashing Mongoose OS from Tasmota
 or compatible firmware types.
