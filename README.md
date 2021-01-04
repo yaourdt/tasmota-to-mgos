@@ -28,9 +28,10 @@ default location in Mongoose OS is `0x7000`, but some devices use `0x1000`
 instead. Be careful to pick the appropriate version, or the device will be
 bricked during the first boot of the target firmware!
 
-For Shelly 1, Shelly 1PM, Shelly 2, Shelly 2.5, and Shelly EM use __0x1000__,
-for Shelly Plug S, Shelly RGBW2, Shelly Dimmer 1, Shelly Dimmer 2, Shelly Bulb,
-Shelly Vintage, Shelly Plug US, Shelly H&T, Shelly Duo use __0x7000__.
+For Shelly 1, Shelly 1L, Shelly 1PM, Shelly 2, Shelly 2.5, Shelly Uni,
+Shelly i3, and Shelly EM use __0x1000__, for Shelly Plug S, Shelly RGBW2,
+Shelly Dimmer 1, Shelly Dimmer 2, Shelly Bulb, Shelly Vintage, Shelly Plug US,
+Shelly H&T, Shelly Duo, Shelly Plug 2 use __0x7000__.
 
 Available versions:
  * [0x1000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x1.bin)
