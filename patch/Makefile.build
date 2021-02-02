@@ -88,17 +88,18 @@ MGOS_SRCS += cs_file.c cs_hex.c cs_rbuf.c \
              mgos_init.c \
              mgos_json_utils.cpp \
              mgos_time.c \
-             mgos_timers.c \
+             mgos_timers.c mgos_timers.cpp \
              mgos_mmap_esp.c \
              mgos_sys_config.c $(notdir $(MGOS_CONFIG_C)) $(notdir $(MGOS_RO_VARS_C)) \
-             mgos_system.c \
+             mgos_system.c mgos_system.cpp \
              mgos_uart.c \
-             mgos_utils.c \
+             mgos_utils.c mgos_utils.cpp \
              cs_crc32.c \
              rboot-bigflash.c rboot-api.c \
              json_utils.c \
              umm_malloc.c \
-             frozen.c
+             frozen.c \
+             error_codes.cpp status.cpp
 
 MGOS_SRCS += esp_config.c \
              esp_coredump.c \
@@ -115,8 +116,7 @@ MGOS_SRCS += esp_config.c \
              esp_main.c \
              esp_periph.c \
              esp_uart.c \
-             esp_umm_malloc.c \
-             error_codes.cpp status.cpp
+             esp_umm_malloc.c
 
 APP_SRCS := $(notdir $(foreach m,$(APP_SOURCES),$(wildcard $(m)))) $(APP_EXTRA_SRCS)
 APP_BIN_LIB_FILES := $(foreach m,$(APP_BIN_LIBS),$(wildcard $(m)))
@@ -145,7 +145,7 @@ MGOS_ESP_FEATURES = '-DUMM_ONFREE(ptr, size)=memset(ptr, 0xfa, size)'
 
 MG_FEATURES ?= $(MG_FEATURES_TINY) -DMG_ESP8266 \
                -DMG_ENABLE_FILESYSTEM -DMG_ENABLE_DIRECTORY_LISTING \
-               -DMG_NET_IF=MG_NET_IF_LWIP_LOW_LEVEL -DMG_MODULE_LINES \
+               -DMG_NET_IF=MG_NET_IF_LWIP_LOW_LEVEL \
                -DCS_DISABLE_MD5 -DMG_EXT_MD5 \
                -DMG_EXT_SHA1
 
@@ -323,6 +323,7 @@ INCDIRS = $(addprefix -I,$(IPATH)) -I$(GEN_DIR)
 LIBDIRS = $(addprefix -L,$(LPATH))
 
 C_CXX_FLAGS += $(MEMORY_FLAGS) $(SHIMS) $(FEATURES) \
+               -DFW_SYS_PARAMS_ADDR=$(SYS_PARAMS_ADDR) \
                -DFW_RF_CAL_DATA_ADDR=$(FW_RF_CAL_DATA_ADDR) \
                -DFW_ARCHITECTURE=$(APP_PLATFORM) \
                $(MGOS_CFLAGS) $(CFLAGS_EXTRA) \
@@ -353,7 +354,7 @@ FW_PARTS = boot:addr=$(BOOT_LOADER_ADDR),src=$(BOOT_LOADER_BIN),update=$(MGOS_UP
            fw:addr=$(APP0_ADDR),addr1=$(APP1_ADDR),src=$(APP_BIN) \
            fs:src=$(FS_IMG),type=fs,addr=$(FS0_ADDR),addr1=$(FS1_ADDR),fs_size=$(MGOS_ROOT_FS_SIZE) \
            rf_cal_data:addr=$(FW_RF_CAL_DATA_ADDR),size=$(RF_CAL_DATA_SIZE),fill=0xff \
-           sys_params:type=sys_params,src=$(SDK_INIT_DATA_PATH)/bin/esp_init_data_default_v08.bin,addr=$(SYS_PARAMS_ADDR) \
+           sys_params:type=sys_params3,src=$(SDK_INIT_DATA_PATH)/bin/esp_init_data_default_v08.bin,addr=$(SYS_PARAMS_ADDR) \
            $(APP_EXTRA_FW_PARTS)
 
 include $(MGOS_PATH)/tools/mk/mgos_fw_meta.mk

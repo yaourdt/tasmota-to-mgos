@@ -83,7 +83,7 @@ conds:
         # FreeRTOS option to enable statically allocated task stacks.
         ESP_IDF_SDKCONFIG_OPTS: >
           ${build_vars.ESP_IDF_SDKCONFIG_OPTS}
-          CONFIG_SUPPORT_STATIC_ALLOCATION=y
+          CONFIG_FREERTOS_SUPPORT_STATIC_ALLOCATION=y
 
   - when: mos.platform == "esp8266"
     apply:

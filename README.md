@@ -19,9 +19,9 @@ shipped with a Mongoose OS based firmware.
 
 ## Install
 
-**Warning:** _This application is still at an early stage. If something fails,
-your device may be bricked, if you don't know how to flash a new firmware over a
-wired connection. Proceed with caution!_
+⚠ Overwriting a device's boot loader via OTA update is a risky operation. If
+something unexpected fails, your device may be bricked, unless you know how to
+flash a new firmware over a wired connection.
 
 There are two versions with different bootloader configuration locations. The
 default location in Mongoose OS is `0x7000`, but some devices use `0x1000`
@@ -34,8 +34,8 @@ Shelly Dimmer 1, Shelly Dimmer 2, Shelly Bulb, Shelly Vintage, Shelly Plug US,
 Shelly H&T, Shelly Duo, Shelly Plug 2 use __0x7000__.
 
 Available versions:
- * [0x1000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x1.bin)
- * [0x7000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x7.bin)
+ * [0x1000](https://dl.dasker.eu/firmware/mgos512k-0x1000.bin)
+ * [0x7000](https://dl.dasker.eu/firmware/mgos512k-0x7000.bin)
 
 Use your current firmware's update mechanism to apply x2mg as you would for any
 other update. If the process succeeds, the device will reboot and you will see a
@@ -95,7 +95,7 @@ for the Mongoose OS bootloader config default location. Alternatively, you may
 build using `BOOT_CONFIG_ADDR=0x1000`.
 
 The generated firmware can be found in `build/fw.zip` and flashed using the
-command `mos flash --esp-erase-chip --esp-flash-params 'dio,4m,80m'`.
+command `mos flash --esp-erase-chip --esp-flash-params 'dout,4m,80m'`.
 
 If you want to read it back without it changing anything, pull pin 14 low during
 boot.
