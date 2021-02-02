@@ -19,9 +19,9 @@ shipped with a Mongoose OS based firmware.
 
 ## Install
 
-**Warning:** _This application is still at an early stage. If something fails,
-your device may be bricked, if you don't know how to flash a new firmware over a
-wired connection. Proceed with caution!_
+⚠ Overwriting a device's boot loader via OTA update is a risky operation. If
+something unexpected fails, your device may be bricked, unless you know how to
+flash a new firmware over a wired connection.
 
 There are two versions with different bootloader configuration locations. The
 default location in Mongoose OS is `0x7000`, but some devices use `0x1000`
