@@ -34,8 +34,8 @@ Shelly Dimmer 1, Shelly Dimmer 2, Shelly Bulb, Shelly Vintage, Shelly Plug US,
 Shelly H&T, Shelly Duo, Shelly Plug 2 use __0x7000__.
 
 Available versions:
- * [0x1000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x1.bin)
- * [0x7000](https://github.com/yaourdt/tasmota-to-mgos/blob/master/binaries/mgos512k-0x7.bin)
+ * [0x1000](https://dl.dasker.eu/firmware/mgos512k-0x1000.bin)
+ * [0x7000](https://dl.dasker.eu/firmware/mgos512k-0x7000.bin)
 
 Use your current firmware's update mechanism to apply x2mg as you would for any
 other update. If the process succeeds, the device will reboot and you will see a
@@ -95,7 +95,7 @@ for the Mongoose OS bootloader config default location. Alternatively, you may
 build using `BOOT_CONFIG_ADDR=0x1000`.
 
 The generated firmware can be found in `build/fw.zip` and flashed using the
-command `mos flash --esp-erase-chip --esp-flash-params 'dio,4m,80m'`.
+command `mos flash --esp-erase-chip --esp-flash-params 'dout,4m,80m'`.
 
 If you want to read it back without it changing anything, pull pin 14 low during
 boot.
