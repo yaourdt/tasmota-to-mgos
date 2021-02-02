@@ -1,7 +1,7 @@
 author: mark dornbach <mark@dornbach.io>
 description: a minimal firmware for ota flashing mongoose os from tasmota or tuya stock firmware
 platform: esp8266
-version: 0.0.2
+version: 0.1.2
 
 libs_version:        2.19.0
 modules_version:     2.19.0
