@@ -23,6 +23,8 @@ shipped with a Mongoose OS based firmware.
 something unexpected fails, your device may be bricked, unless you know how to
 flash a new firmware over a wired connection.
 
+⚠ Specifically, you currently should't use this for Shelly PlugS (due to this [known issue](https://github.com/yaourdt/tasmota-to-mgos/issues/3)).
+
 There are two versions with different bootloader configuration locations. The
 default location in Mongoose OS is `0x7000`, but some devices use `0x1000`
 instead. Be careful to pick the appropriate version, or the device will be
@@ -37,21 +39,23 @@ Available versions:
  * [0x1000](https://dl.dasker.eu/firmware/mgos512k-0x1000.bin)
  * [0x7000](https://dl.dasker.eu/firmware/mgos512k-0x7000.bin)
 
-Use your current firmware's update mechanism to apply x2mg as you would for any
-other update. If the process succeeds, the device will reboot and you will see a
-new WiFi network labeled _mg-????_. Be patient, this process can take up to two
+**Step 1**: Use your current firmware's update mechanism to apply that intermediate firmware 
+as you would for any other update. If the process succeeds, the device will reboot 
+and you will see a new WiFi network labeled _mg-????_. Be patient, this process can take up to two
 minutes.
 
-As soon as you have joined the devices WiFi network, you can install the desired
-version of a Mongoose OS based firmware via the command
+**Step 2**: Obtain a target firmware file. If you own a
+Shelly device and want to revert to stock firmware, you can find the matching
+files [here](https://api.shelly.cloud/files/firmware).
+
+**Step 3**: As soon as you have joined the device's new WiFi network, you can install the desired
+version of a Mongoose OS based firmware by issuing this command from your computer:
 
 ```
 curl -i -F filedata=@./fw.zip http://10.42.42.44/update
 ```
 
-Replace `./fw.zip` with the path to your target firmware ZIP-file. If you own a
-Shelly device and want to revert to stock firmware, you can find the matching
-files [here](https://api.shelly.cloud/files/firmware).
+Replace `./fw.zip` with the path to the target firmware ZIP-file you obtained previously. 
 
 ## Trouble shooting
 
